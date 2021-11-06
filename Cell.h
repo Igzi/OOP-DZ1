@@ -65,7 +65,7 @@ public:
 	virtual bool cmp(string value) override;
 private:
 	double decimalValue;
-	void roundValue(double &value);
+	string roundValue(double &value);
 };
 
 class TextCell : public Cell {

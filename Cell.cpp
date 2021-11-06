@@ -1,7 +1,4 @@
 #include "Cell.h"
-#include <math.h>
-#include <iomanip>
-#include <sstream>
 
 const double eps = 0.0001;
 
@@ -161,10 +158,7 @@ void DecimalCell::add(double val)
 {
 	if (value != "") {
 		decimalValue += val;
-		roundValue(decimalValue);
-		stringstream stream;
-		stream << std::fixed << std::setprecision(1) << decimalValue;
-		value = stream.str();
+		value = roundValue(decimalValue);
 	}
 }
 
@@ -173,9 +167,7 @@ void DecimalCell::mul(double val)
 	if (value != "") {
 		decimalValue *= val;
 		roundValue(decimalValue);
-		stringstream stream;
-		stream << std::fixed << std::setprecision(1) << decimalValue;
-		value = stream.str();
+		value = roundValue(decimalValue);
 	}
 }
 
@@ -186,14 +178,26 @@ bool DecimalCell::cmp(string value)
 	return (round(10*decimalValue) + eps  < round(10 * cmpValue));
 }
 
-void DecimalCell::roundValue(double &value)
+string DecimalCell::roundValue(double &value)
 {
 	value *= 10;
 	if (abs(value - (int)value - 0.5) < eps) {
 		if ((int)value % 2) value += 0.5;
 		else value -= 0.5;
 	}
-	value = round(value) / 10;
+	int intValue = round(value);
+	value = (double)intValue / 10;
+
+	string res = "";
+	res += '0' + intValue % 10;
+	intValue /= 10;
+	res += '.';
+	while (intValue > 0 && res.size() < 3) {
+		res += '0' + intValue % 10;
+		intValue /= 10;
+	}
+	reverse(res.begin(), res.end());
+	return res;
 }
 
 TextCell::TextCell(string data):Cell(data){}
