@@ -19,8 +19,8 @@ TableEditor::~TableEditor()
 int TableEditor::importTable(string table)
 {
 	int r = 0, p = 0;
-	while (table[p]!='\0') {
-		p = readRow(table, p, r);
+	while (table[p] != '\0') {
+		p = readRow(table, p, r, ',');
 		if (p == -1) return r - 1;
 		r++;
 	}
@@ -36,7 +36,7 @@ string TableEditor::exportTable()
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
 			res.append(table[i][j]->getValue());
-			if(j!=m-1) res += ',';
+			if (j != m - 1) res += ',';
 		}
 		res += '\n';
 	}
@@ -80,7 +80,7 @@ void TableEditor::insertRow()
 	if (r == -1) r = table.getSize();
 	Vector<Cell*> v;
 	table.insert(r, v);
-	readRow(row, 0, r);
+	readRow(row, 0, r, ' ');
 }
 
 void TableEditor::insertColumn(string col_name, Type type)
@@ -245,15 +245,15 @@ int TableEditor::countDistinctValues(string col_name)
 	return res;
 }
 
-int TableEditor::readRow(string &rows, int p, int r)
+int TableEditor::readRow(string& rows, int p, int r, char sep)
 {
 	int c = 0;
 	if (r >= table.getSize()) {
 		Vector<Cell*> v;
 		table.push(v);
 	}
-	while (rows[p]!='\n' && rows[p]!='\0') {
-		p = readCell(rows, p, r, c);
+	while (rows[p] != '\n' && rows[p] != '\0') {
+		p = readCell(rows, p, r, c, sep);
 		if (p == -1) return -1;
 		c++;
 	}
@@ -262,7 +262,7 @@ int TableEditor::readRow(string &rows, int p, int r)
 	return p;
 }
 
-int TableEditor::readCell(string &cells, int p, int r, int c)
+int TableEditor::readCell(string& cells, int p, int r, int c, char sep)
 {
 	string value = "";
 	if (cells[p] == '"') {
@@ -275,10 +275,10 @@ int TableEditor::readCell(string &cells, int p, int r, int c)
 		}
 		value += cells[p];
 		p++;
-		if (cells[p] != ',' && cells[p] != '\n' && cells[p] != '\0') return -1;
+		if (cells[p] != sep && cells[p] != '\n' && cells[p] != '\0') return -1;
 	}
 	else {
-		while (cells[p] != ',' && cells[p] != '\n' && cells[p] != '\0') {
+		while (cells[p] != sep && cells[p] != '\n' && cells[p] != '\0') {
 			value += cells[p];
 			p++;
 		}
@@ -314,7 +314,7 @@ int TableEditor::readCell(string &cells, int p, int r, int c)
 		}
 		table[r].push(cell);
 	}
-	if (cells[p] == ',') p++;
+	if (cells[p] == sep) p++;
 	return p;
 }
 

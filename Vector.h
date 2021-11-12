@@ -11,7 +11,7 @@ public:
 		size = 0;
 	};
 
-	Vector(const Vector<T> &v)
+	Vector(const Vector<T>& v)
 	{
 		size = v.size;
 		capacity = v.capacity;
@@ -36,7 +36,7 @@ public:
 		return size;
 	};
 
-	void insert(int pos,T val) {
+	void insert(int pos, T val) {
 		if (pos<0 || pos>size) pos = size;
 		if (size == capacity) {
 			doubleCapacity();

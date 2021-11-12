@@ -141,7 +141,7 @@ bool DecimalCell::checkValue()
 {
 	for (int i = 0; i < value.size(); i++) {
 		if (i == 0 && value[i] == '-') continue;
-		if (value[i] == '.') continue;
+		if (i == value.size() - 2 && value[i] == '.') continue;
 		if (value[i] < '0' && value[i]>'9') return false;
 	}
 	return true;
@@ -166,7 +166,6 @@ void DecimalCell::mul(double val)
 {
 	if (value != "") {
 		decimalValue *= val;
-		roundValue(decimalValue);
 		value = roundValue(decimalValue);
 	}
 }
