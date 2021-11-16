@@ -8,18 +8,14 @@ TableEditor::TableEditor()
 
 TableEditor::~TableEditor()
 {
-	for (int i = 0; i < table.getSize(); i++) {
-		for (int j = 0; j < table[i].getSize(); j++) {
-			delete table[i][j];
-			table[i][j] = nullptr;
-		}
-	}
+	deleteTable();
 }
 
 int TableEditor::importTable(string table)
 {
+	deleteTable();
 	int r = 0, p = 0;
-	while (table[p] != '\0') {
+	while (p < table.size()) {
 		p = readRow(table, p, r, ',');
 		if (p == -1) return r - 1;
 		r++;
@@ -80,7 +76,7 @@ void TableEditor::insertRow()
 	if (r == -1) r = table.getSize();
 	Vector<Cell*> v;
 	table.insert(r, v);
-	readRow(row, 0, r, ' ');
+	readRow(row, 0, r, ',');
 }
 
 void TableEditor::insertColumn(string col_name, Type type)
@@ -110,6 +106,8 @@ void TableEditor::deleteContent()
 {
 	if (selectedRow != -1 && selectedColumn != -1) {
 		table[selectedRow][selectedColumn]->deleteCell();
+		selectedRow = -1;
+		selectedColumn = -1;
 		return;
 	}
 	if (selectedRow != -1) {
@@ -118,6 +116,7 @@ void TableEditor::deleteContent()
 			table[selectedRow][i] = nullptr;
 		}
 		table.remove(selectedRow);
+		selectedRow = -1;
 	}
 	if (selectedColumn != -1) {
 		for (int i = 0; i < table.getSize(); i++) {
@@ -125,6 +124,7 @@ void TableEditor::deleteContent()
 			table[i][selectedColumn] = nullptr;
 			table[i].remove(selectedColumn);
 		}
+		selectedColumn = -1;
 	}
 }
 
@@ -236,13 +236,20 @@ int TableEditor::countDistinctValues(string col_name)
 	int col = findColumn(col_name);
 	if (col == -1) return -2;
 
-	int res = table.getSize() - 1;
+	int res = 0;
 	for (int i = 1; i < table.getSize(); i++) {
-		if (findLastOf(table[i][col]->getValue(), col_name) == (i - 1)) {
-			res -= countValues(table[i][col]->getValue(), col_name) - 1;
-		}
+		if (findLastOf(table[i][col]->getValue(), col_name) == (i - 1)) res ++;
 	}
 	return res;
+}
+
+void TableEditor::deleteTable() {
+	for (int i = 0; i < table.getSize(); i++) {
+		for (int j = 0; j < table[i].getSize(); j++) {
+			delete table[i][j];
+			table[i][j] = nullptr;
+		}
+	}
 }
 
 int TableEditor::readRow(string& rows, int p, int r, char sep)
@@ -252,7 +259,7 @@ int TableEditor::readRow(string& rows, int p, int r, char sep)
 		Vector<Cell*> v;
 		table.push(v);
 	}
-	while (rows[p] != '\n' && rows[p] != '\0') {
+	while (rows[p] != '\n' && p < rows.size()) {
 		p = readCell(rows, p, r, c, sep);
 		if (p == -1) return -1;
 		c++;
@@ -269,16 +276,16 @@ int TableEditor::readCell(string& cells, int p, int r, int c, char sep)
 		value += cells[p];
 		p++;
 		while (cells[p] != '"') {
-			if (cells[p] == '\n' || cells[p] == '\0') return -1;
+			if (cells[p] == '\n' || p == cells.size()) return -1;
 			value += cells[p];
 			p++;
 		}
 		value += cells[p];
 		p++;
-		if (cells[p] != sep && cells[p] != '\n' && cells[p] != '\0') return -1;
+		if (cells[p] != sep && cells[p] != '\n' && p < cells.size()) return -1;
 	}
 	else {
-		while (cells[p] != sep && cells[p] != '\n' && cells[p] != '\0') {
+		while (cells[p] != sep && cells[p] != '\n' && p < cells.size()) {
 			value += cells[p];
 			p++;
 		}

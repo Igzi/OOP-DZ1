@@ -37,6 +37,7 @@ private:
 	Vector<Vector<Cell*>> table;
 	int selectedRow, selectedColumn;
 
+	void deleteTable();
 	int readRow(string &rows, int p, int r, char sep);
 	int readCell(string &cells, int p, int r, int c, char sep);
 	int findColumn(string col_name);

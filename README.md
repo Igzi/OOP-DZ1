@@ -1,2 +1,2 @@
 # OOP DZ1
- Domaci iz objektno orijentisanog programiranja.
+ Homework from Object Oriented Programming.

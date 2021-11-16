@@ -19,7 +19,7 @@ string Cell::getValue()
 
 void Cell::deleteCell()
 {
-	value = "";
+	this->editCell("");
 }
 
 char Cell::getType()
@@ -91,7 +91,7 @@ bool IntCell::checkValue()
 {
 	for (int i = 0; i < value.size(); i++) {
 		if (i == 0 && value[i] == '-') continue;
-		if (value[i] < '0' && value[i]>'9') return false;
+		if (value[i] < '0' || value[i]>'9') return false;
 	}
 	return true;
 }
@@ -128,7 +128,7 @@ bool IntCell::cmp(string value)
 
 DecimalCell::DecimalCell(string data):Cell(data)
 {
-	if (data != "") decimalValue = stof(data);
+	if (data != "") decimalValue = stod(data);
 	else decimalValue = -1;
 }
 
@@ -142,7 +142,7 @@ bool DecimalCell::checkValue()
 	for (int i = 0; i < value.size(); i++) {
 		if (i == 0 && value[i] == '-') continue;
 		if (i == value.size() - 2 && value[i] == '.') continue;
-		if (value[i] < '0' && value[i]>'9') return false;
+		if (value[i] < '0' || value[i]>'9') return false;
 	}
 	return true;
 }
@@ -150,7 +150,7 @@ bool DecimalCell::checkValue()
 void DecimalCell::editCell(string data)
 {
 	value = data;
-	if (data != "") decimalValue = stof(data);
+	if (data != "") decimalValue = stod(data);
 	else decimalValue = -1;
 }
 
@@ -172,7 +172,7 @@ void DecimalCell::mul(double val)
 
 bool DecimalCell::cmp(string value)
 {
-	double cmpValue = stof(value);
+	double cmpValue = stod(value);
 	roundValue(cmpValue);
 	return (round(10*decimalValue) + eps  < round(10 * cmpValue));
 }
