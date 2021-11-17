@@ -17,7 +17,10 @@ int TableEditor::importTable(string table)
 	int r = 0, p = 0;
 	while (p < table.size()) {
 		p = readRow(table, p, r, ',');
-		if (p == -1) return r - 1;
+		if (p == -1) {
+			deleteTable();
+			return r - 1;
+		}
 		r++;
 	}
 	return -2;
