@@ -1,2 +1,2 @@
 # OOP DZ1
- Homework from Object Oriented Programming.
+ Homework for Object Oriented Programming.
