@@ -197,7 +197,7 @@ int TableEditor::findFirstOf(string value, string col_name)
 	int col = findColumn(col_name);
 	if (col == -1) return -2;
 
-	int res = -2;
+	int res = -1;
 	for (int i = table.getSize() - 1; i >= 0; i--) {
 		if (table[i][col]->getValue() == value) {
 			res = i;
@@ -211,7 +211,7 @@ int TableEditor::findLastOf(string value, string col_name)
 	int col = findColumn(col_name);
 	if (col == -1) return -2;
 
-	int res = -2;
+	int res = -1;
 	for (int i = 0; i < table.getSize(); i++) {
 		if (table[i][col]->getValue() == value) {
 			res = i;
